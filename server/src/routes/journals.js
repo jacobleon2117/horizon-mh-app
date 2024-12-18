@@ -1,16 +1,37 @@
-const express = require("express");
+import express from "express";
+import { check, validationResult } from "express-validator";
+import auth from "../middleware/auth.js";
+import Journal from "../models/Journal.js";
+
 const router = express.Router();
-const auth = require("../middleware/auth");
-const Journal = require("../models/Journal");
 
 /**
- * @swagger
+ * @openapi
  * /api/journals:
  *   post:
- *     tags: [Journals]
+ *     tags:
+ *       - Journals
  *     summary: Create a new journal entry
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *               - mood
+ *             properties:
+ *               title:
+ *                 type: string
+ *               content:
+ *                 type: string
+ *               mood:
+ *                 type: string
+ *                 enum: [happy, sad, angry, anxious, calm, stressed, neutral]
  */
 router.post(
   "/",
@@ -56,13 +77,31 @@ router.post(
 );
 
 /**
- * @swagger
+ * @openapi
  * /api/journals:
  *   get:
- *     tags: [Journals]
+ *     tags:
+ *       - Journals
  *     summary: Get user's journal entries
  *     security:
  *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of user's journal entries
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     journals:
+ *                       type: array
+ *                       items:
+ *                         type: object
  */
 router.get("/", auth, async (req, res) => {
   try {
@@ -82,4 +121,4 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
