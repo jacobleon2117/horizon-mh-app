@@ -3,19 +3,12 @@
   functions = "server/.netlify/functions"
   publish = "client/dist"
 
-  [[redirects]]
-    from = "/*"
-    to = "/index.html"
-    status = 200
-
 [[redirects]]
-  from = "/api/*"  
+  from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
 
-## (optional) Settings for Netlify Dev
-## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
-#[dev]
-#  command = "npm run dev"  # Command to start both backend and frontend in dev mode
-#  port = 3000             # Port that the dev server will be listening on
-#  publish = "dist"        # Folder with the static content for _redirect file
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
