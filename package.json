@@ -1,0 +1,26 @@
+{
+  "name": "horizon-mh-app",
+  "version": "1.0.0",
+  "description": "## Overview Horizon is a comprehensive mental health support platform designed to provide accessible, personalized mental health resources and support.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run build --prefix client",
+    "start": "node server/src/index.js",
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacobleon2117/horizon-mh-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jacobleon2117/horizon-mh-app/issues"
+  },
+  "homepage": "https://github.com/jacobleon2117/horizon-mh-app#readme",
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
