@@ -16,7 +16,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Create a wrapper component to use useLocation
 const AppContent = () => {
   const location = useLocation();
   const isDashboardRoute = location.pathname.startsWith("/dashboard");
