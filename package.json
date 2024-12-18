@@ -22,5 +22,7 @@
   "homepage": "https://github.com/jacobleon2117/horizon-mh-app#readme",
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
   }
 }

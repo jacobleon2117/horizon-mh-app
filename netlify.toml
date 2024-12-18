@@ -1,21 +1,22 @@
-# example netlify.toml
 [build]
-  command = "npm run build"
-  functions = "netlify/functions"
-  publish = "client/dist"
+  command = "npm run build"             # Command to build the frontend
+  functions = "server/.netlify/functions" # Path to your serverless functions
+  publish = "client/dist"                # Path to the React build output
 
-  ## Uncomment to use this redirect for Single Page Applications like create-react-app.
-  ## Not needed for static site generators.
+  # Uncomment for Single Page Application handling
   #[[redirects]]
   #  from = "/*"
   #  to = "/index.html"
   #  status = 200
 
-  ## (optional) Settings for Netlify Dev
-  ## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
-  #[dev]
-  #  command = "yarn start" # Command to start your dev server
-  #  port = 3000 # Port that the dev server will be listening on
-  #  publish = "dist" # Folder with the static content for _redirect file
+[[redirects]]
+  from = "/api/*"                       # Redirect API calls to serverless functions
+  to = "/.netlify/functions/api/:splat"  # Points to the serverless function
+  status = 200
 
-  ## more info on configuring this file: https://ntl.fyi/file-based-build-config
+## (optional) Settings for Netlify Dev
+## https://github.com/netlify/cli/blob/main/docs/netlify-dev.md#project-detection
+#[dev]
+#  command = "npm run dev"  # Command to start both backend and frontend in dev mode
+#  port = 3000             # Port that the dev server will be listening on
+#  publish = "dist"        # Folder with the static content for _redirect file
