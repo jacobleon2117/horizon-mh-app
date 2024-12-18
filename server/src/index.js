@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { createServer } from "http";
@@ -7,6 +6,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import logger from "./config/logger.js";
 import testRoute from "./routes/test.js";
+import journalRoutes from "./routes/journals.js";
 
 const app = express();
 const httpServer = createServer(app);
@@ -17,7 +17,6 @@ const io = new Server(httpServer, {
   },
 });
 
-// Middleware (consolidate cors configuration)
 app.use(
   cors({
     origin: process.env.CLIENT_URL || "http://localhost:5173",
@@ -26,13 +25,12 @@ app.use(
 );
 app.use(express.json());
 
-// Routes
-app.use("/api/test", testRoute); // Use the imported route
+app.use("/api/test", testRoute);
+app.use("/api/journals", journalRoutes);
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// WebSocket setup
 io.on("connection", (socket) => {
   logger.info("A user connected");
 
@@ -51,7 +49,6 @@ io.on("connection", (socket) => {
   });
 });
 
-// Error handling
 app.use((err, req, res, next) => {
   logger.error(err.stack);
   res.status(500).json({

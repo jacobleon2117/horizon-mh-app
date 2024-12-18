@@ -1,49 +1,67 @@
 import React, { useState, useEffect } from "react";
 import { Plus, Search, Calendar, ChevronDown } from "lucide-react";
+import { toast } from "react-hot-toast";
 import useJournalStore from "@/stores/journalStore";
-import EmptyState from "@/components/common/EmptyState";
+import { journalsApi } from "@/api";
 
-const JournalEntry = ({ title, date, excerpt, mood }) => (
+const JournalEntry = ({ title, content, mood, createdAt }) => (
   <div className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer">
     <div className="flex justify-between items-start">
       <div>
         <h3 className="font-semibold text-lg text-[rgb(26,55,91)]">{title}</h3>
-        <p className="text-gray-500 text-sm mt-1">{date}</p>
+        <p className="text-gray-500 text-sm mt-1">
+          {new Date(createdAt).toLocaleDateString()}
+        </p>
       </div>
       <span className="px-3 py-1 rounded-full text-sm bg-blue-50 text-[rgb(26,55,91)]">
         {mood}
       </span>
     </div>
-    <p className="text-gray-600 mt-4 line-clamp-3">{excerpt}</p>
+    <p className="text-gray-600 mt-4 line-clamp-3">{content}</p>
   </div>
 );
 
-const NewJournalModal = ({ isOpen, onClose, onSave }) => {
+const EmptyState = ({ title, description, action }) => (
+  <div className="text-center py-12">
+    <div className="rounded-full bg-gray-100 w-16 h-16 flex items-center justify-center mx-auto mb-4">
+      <Plus className="w-8 h-8 text-gray-400" />
+    </div>
+    <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
+    <p className="text-gray-500 mb-4">{description}</p>
+    {action}
+  </div>
+);
+
+const NewJournalModal = ({ isOpen, onClose }) => {
   const [title, setTitle] = useState("");
   const [mood, setMood] = useState("happy");
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const addJournal = useJournalStore((state) => state.addJournal);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     try {
-      const response = await fetch("/api/journals", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title, mood, content }),
+      const response = await journalsApi.create({
+        title,
+        content,
+        mood: mood.toLowerCase(),
       });
 
-      if (!response.ok) throw new Error("Failed to create journal");
-
-      const data = await response.json();
-      onSave(data.journal);
+      addJournal(response.data.data.journal);
+      toast.success("Journal entry created successfully!");
       onClose();
+
       setTitle("");
       setMood("happy");
       setContent("");
     } catch (error) {
-      console.error("Error creating journal:", error);
+      console.error("Failed to create journal:", error);
+      toast.error("Failed to create journal entry");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -81,10 +99,12 @@ const NewJournalModal = ({ isOpen, onClose, onSave }) => {
                   className="w-full p-2 border rounded-md"
                 >
                   <option value="happy">Happy</option>
-                  <option value="calm">Calm</option>
-                  <option value="anxious">Anxious</option>
-                  <option value="stressed">Stressed</option>
                   <option value="sad">Sad</option>
+                  <option value="angry">Angry</option>
+                  <option value="anxious">Anxious</option>
+                  <option value="calm">Calm</option>
+                  <option value="stressed">Stressed</option>
+                  <option value="neutral">Neutral</option>
                 </select>
               </div>
               <div>
@@ -111,9 +131,10 @@ const NewJournalModal = ({ isOpen, onClose, onSave }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-[rgb(26,55,91)] text-white rounded-md hover:bg-opacity-90"
+              disabled={isSubmitting}
+              className="px-4 py-2 bg-[rgb(26,55,91)] text-white rounded-md hover:bg-opacity-90 disabled:opacity-50"
             >
-              Save Entry
+              {isSubmitting ? "Saving..." : "Save Entry"}
             </button>
           </div>
         </form>
@@ -124,15 +145,11 @@ const NewJournalModal = ({ isOpen, onClose, onSave }) => {
 
 const JournalsPage = () => {
   const [isNewEntryOpen, setIsNewEntryOpen] = useState(false);
-  const { journals, isLoading, fetchJournals, addJournal } = useJournalStore();
+  const { journals, isLoading, fetchJournals } = useJournalStore();
 
   useEffect(() => {
     fetchJournals();
   }, [fetchJournals]);
-
-  const handleSaveJournal = (journal) => {
-    addJournal(journal);
-  };
 
   if (isLoading) {
     return (
@@ -200,7 +217,7 @@ const JournalsPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {journals.map((entry, index) => (
-              <JournalEntry key={index} {...entry} />
+              <JournalEntry key={entry._id || index} {...entry} />
             ))}
           </div>
         </>
@@ -209,7 +226,6 @@ const JournalsPage = () => {
       <NewJournalModal
         isOpen={isNewEntryOpen}
         onClose={() => setIsNewEntryOpen(false)}
-        onSave={handleSaveJournal}
       />
     </div>
   );

@@ -21,16 +21,6 @@ const journalSchema = new mongoose.Schema(
       enum: ["happy", "sad", "angry", "anxious", "calm", "stressed", "neutral"],
       required: true,
     },
-    tags: [
-      {
-        type: String,
-        trim: true,
-      },
-    ],
-    isPrivate: {
-      type: Boolean,
-      default: true,
-    },
   },
   {
     timestamps: true,
