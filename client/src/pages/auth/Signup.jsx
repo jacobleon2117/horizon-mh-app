@@ -50,7 +50,7 @@ const Signup = () => {
               {error}
             </div>
           )}
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-4">
             <div className="mb-4">
               <label htmlFor="name" className="sr-only">
                 Full Name
@@ -122,7 +122,7 @@ const Signup = () => {
                 </button>
               </div>
             </div>
-            <div>
+            <div className="mb-4">
               <label htmlFor="confirm-password" className="sr-only">
                 Confirm Password
               </label>
