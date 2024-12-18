@@ -4,7 +4,7 @@
   "description": "## Overview Horizon is a comprehensive mental health support platform designed to provide accessible, personalized mental health resources and support.",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build --prefix client",
+    "build": "cd client && npm install && npm run build",
     "start": "node server/src/index.js",
     "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
     "test": "echo \"Error: no test specified\" && exit 1"

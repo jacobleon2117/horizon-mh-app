@@ -1,5 +1,7 @@
-[build]
-  command = "npm run build"
+[
+  build
+]
+  command = "npm install && npm run build"
   functions = "server/.netlify/functions"
   publish = "client/dist"
 
