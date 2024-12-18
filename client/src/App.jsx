@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
@@ -16,30 +16,42 @@ const queryClient = new QueryClient({
   },
 });
 
+// Create a wrapper component to use useLocation
+const AppContent = () => {
+  const location = useLocation();
+  const isDashboardRoute = location.pathname.startsWith("/dashboard");
+
+  return (
+    <>
+      {!isDashboardRoute && <TopNav />}
+      <AppRoutes />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            style: {
+              background: "green",
+              color: "white",
+            },
+          },
+          error: {
+            style: {
+              background: "red",
+              color: "white",
+            },
+          },
+        }}
+      />
+    </>
+  );
+};
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <TopNav />
-          <AppRoutes />
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              success: {
-                style: {
-                  background: "green",
-                  color: "white",
-                },
-              },
-              error: {
-                style: {
-                  background: "red",
-                  color: "white",
-                },
-              },
-            }}
-          />
+          <AppContent />
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
