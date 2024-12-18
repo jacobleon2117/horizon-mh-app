@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Vite build output
+dist/
+
+# Static files
+*.log
+*.cache
+.cache/
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Testing
+coverage/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Netlify
+.netlify/
+netlify.toml
+
+# Miscellaneous
+yarn.lock
+package-lock.json
+npm-debug.log*
+*.tgz
