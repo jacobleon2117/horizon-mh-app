@@ -1,12 +1,21 @@
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import dotenv from "dotenv";
 import logger from "./config/logger.js";
 import testRoute from "./routes/test.js";
 import journalRoutes from "./routes/journals.js";
+
+dotenv.config();
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => logger.info("Connected to MongoDB"))
+  .catch((err) => logger.error("MongoDB connection error:", err));
 
 const app = express();
 const httpServer = createServer(app);
