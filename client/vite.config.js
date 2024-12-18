@@ -4,6 +4,11 @@ import path from "path";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      external: ["react/jsx-runtime"], // If the module needs to be external
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
