@@ -1,3 +1,6 @@
+import React from "react";
+import { Plus } from "lucide-react";
+
 const EmptyState = ({ title, description, action }) => {
   return (
     <div className="text-center py-12">
@@ -10,3 +13,5 @@ const EmptyState = ({ title, description, action }) => {
     </div>
   );
 };
+
+export default EmptyState;
